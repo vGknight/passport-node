@@ -43,9 +43,12 @@ module.exports = function(passport) {
             // by default, local strategy uses username and password, we will override with email
             usernameField : 'username',
             passwordField : 'password',
+
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, username, password, done) {
+
+           
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
             connection.query("SELECT * FROM user WHERE username = ?",[username], function(err, rows) {
@@ -58,12 +61,19 @@ module.exports = function(passport) {
                     // create the user
                     var newUserMysql = {
                         username: username,
-                        password: bcrypt.hashSync(password, null, null)  // use the generateHash function in our user model
+                        password: bcrypt.hashSync(password, null, null), // use the generateHash function in our user model
+                        email: req.body.email, // since we set passReqToCallback to true we can access other fields in the request
+                        fName: req.body.fName,
+                        lName: req.body.lName
+                    
                     };
 
-                    var insertQuery = "INSERT INTO user ( username, password ) values (?,?)";
+                    var insertQuery = "INSERT INTO user ( username, password, email, fName, lName) values (?,?,?,?,?)";
 
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
+                    console.log(newUserMysql);
+
+                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password,newUserMysql.email,newUserMysql.fName, newUserMysql.lName]
+                        ,function(err, rows) {
                         newUserMysql.id = rows.insertId;
 
                         return done(null, newUserMysql);

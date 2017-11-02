@@ -20,7 +20,7 @@ var post = {
         orm.getMyBlogs(id, function(result) {
 
             cb(result);
-            console.log(result);
+            // console.log(result);
 
         });
     },

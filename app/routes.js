@@ -23,7 +23,7 @@ module.exports = function(app, passport) {
                 post: data
                 // user: req.user
             };
-            console.log(hbsObject);
+            // console.log(hbsObject);
 
             res.render('index.handlebars', hbsObject); // load the index.handlebars file
             
@@ -113,8 +113,8 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
 
 
-    app.post('/api/post/:id', isLoggedIn, function(req, res) {
-    	 // app.post('/api/post/:id', function(req, res) {
+    // app.post('/api/post/:id', isLoggedIn, function(req, res) {
+    	 app.post('/api/post/', function(req, res) {
 
 
     	    var title = req.body.title;
@@ -122,28 +122,15 @@ module.exports = function(app, passport) {
         	var tags = req.body.tags;
         	var status = req.body.status;
            	var createTime = req.body.createTime;
-        	var authorId = req.params.id;
+        	var authorId = req.user.id;
 
         	console.log(authorId + " this is the authorid")
         	console.log(content + " this is the content")
 
         post.addBlogPost(title, content, tags, status, createTime, authorId, function() {
 
-        	
 
-
-
-            // var hbsObject = {
-            //     post: data,
-            //     user: req.user
-            //     // user: req.user
-            // };
-            // console.log(hbsObject);
-            // console.log(req.user.id + " req.user.id )))")
-
-            // res.render("profile.handlebars", hbsObject);
-
-
+            res.redirect('/profile');
         });
     });
 
