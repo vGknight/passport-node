@@ -1,0 +1,75 @@
+<div class="container">
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span>Welcome {{user.username}}</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+    <div class="row">
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3><span class="fa fa-user"></span> Local</h3>
+                <p>
+                    <strong>id</strong>: {{user.id}}
+                    <br>
+                    <strong>username</strong>: {{user.username }}
+                    <br>
+                    <strong>password</strong>: {{user.password }}
+                    <br>
+                </p>
+           <!--      <p>Create blog stuff here</p>
+                <p> list my blogs here </p> -->
+            </div>
+        </div>
+    </div>
+    <!-- blogs dump here -->
+    <!-- new blob -->
+    <div class="col-6 text-center">
+        <form class="create-form" id="myForm">
+            <div class="form-group">
+                <label for="blog-title">Title:</label>
+                <input type="text" class="form-control" id="blog-title" placeholder="Title of your blog">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="blog-content" name="blog-content" rows="6" placeholder="Blog Post goes here" required="true" autofocus></textarea>
+                <button class="btn btn-outline-dark" type="submit">Add Post
+                    <i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+        </form>
+    </div>
+    <!-- existing blogs -->
+<!--     <div class="col-6" id="burgers-uneaten">
+        {{#each post}}
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <div class="change-devoured card-body" data-id="{{this.id}}">
+                        {{title}} {{content}} </div>
+                </div>
+            </div>
+            <div class="col-4 center">
+                <button type="button" class="btn btn-outline-dark change-devoured" data-id="{{this.id}}">
+                    do something!
+                    <i class="fa fa-cutlery" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        {{/each}}
+    </div> -->
+            {{#each post}}
+        <div class="blog-post">
+            <h2 class="blog-post-title">{{this.title}}</h2>
+            <p class="blog-post-meta">December 23, 2013 by <a href="#">{{this.username}}</a></p>
+            {{this.content}}
+
+            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+            <blockquote>
+              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </blockquote>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+          </div>
+
+          {{/each}}
+    </div>
+</div>
+</div>
