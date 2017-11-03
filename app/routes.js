@@ -25,7 +25,8 @@ module.exports = function(app, passport) {
             };
             // console.log(hbsObject);
 
-            res.render('index.handlebars', hbsObject); // load the index.handlebars file
+            // res.render('index.handlebars', hbsObject); // load the index.handlebars file
+            res.render('index2.handlebars', hbsObject); // load the index.handlebars file
 
         });
     });
