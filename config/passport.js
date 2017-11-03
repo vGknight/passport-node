@@ -3,6 +3,10 @@
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
 
+//github
+
+var GitHubStrategy = require('passport-github').Strategy;
+
 // load up the user model
 var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
@@ -114,4 +118,18 @@ module.exports = function(passport) {
             });
         })
     );
+
+    passport.use(new GitHubStrategy({
+    clientID: '413762fb11222d82d3ea',
+    clientSecret: '708a467ef51ff403c81809f23ebced5ae8ec584e',
+    callbackURL: "http://127.0.0.1:8080/auth/github/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+
+    console.log(profile);
+    User.findOrCreate({ githubId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 };

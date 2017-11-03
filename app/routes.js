@@ -4,7 +4,7 @@ var mysql = require('mysql');
 var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
 var orm = require("../config/orm.js");
-var post = require("../models/post.js");
+var postModel = require("../models/postModel.js");
 
 
 
@@ -17,7 +17,7 @@ module.exports = function(app, passport) {
     // =====================================
     app.get('/', function(req, res) {
 
-        post.selectAll(function(data) {
+        postModel.selectAll(function(data) {
 
             var hbsObject = {
                 post: data
@@ -26,7 +26,7 @@ module.exports = function(app, passport) {
             // console.log(hbsObject);
 
             res.render('index.handlebars', hbsObject); // load the index.handlebars file
-            
+
         });
     });
 
@@ -69,6 +69,11 @@ module.exports = function(app, passport) {
         res.render('signup.handlebars', { message: req.flash('signupMessage') });
     });
 
+     app.get('/signup2', function(req, res) {
+        // render the page and pass in any flash data if it exists
+        res.render('signup2.handlebars', { message: req.flash('signupMessage') });
+    });
+
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect: '/profile', // redirect to the secure profile section
@@ -83,7 +88,7 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
 
-        post.getMyBlogs(req.user.id, function(data) {
+        postModel.getMyBlogs(req.user.id, function(data) {
 
             var hbsObject = {
                 post: data,
@@ -107,32 +112,50 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    	    // Posting Section=========================
+    // Posting Section=========================
     // =====================================
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
 
 
     // app.post('/api/post/:id', isLoggedIn, function(req, res) {
-    	 app.post('/api/post/', function(req, res) {
+    app.post('/api/post/', function(req, res) {
 
 
-    	    var title = req.body.title;
-        	var content = req.body.content;
-        	var tags = req.body.tags;
-        	var status = req.body.status;
-           	var createTime = req.body.createTime;
-        	var authorId = req.user.id;
+        var title = req.body.title;
+        var content = req.body.content;
+        var tags = req.body.tags;
+        var status = req.body.status;
+        var createTime = req.body.createTime;
+        var authorId = req.user.id;
 
-        	console.log(authorId + " this is the authorid")
-        	console.log(content + " this is the content")
+        console.log(authorId + " this is the authorid")
+        console.log(content + " this is the content")
 
-        post.addBlogPost(title, content, tags, status, createTime, authorId, function() {
+        postModel.addBlogPost(title, content, tags, status, createTime, authorId, function() {
 
 
             res.redirect('/profile');
         });
+
     });
+
+    //github stuff
+
+    app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:username' ] }));
+
+    // app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+    app.get('/auth/github/callback',
+        passport.authenticate('github', { failureRedirect: '/login' }),
+        function(req, res) {
+            // Successful authentication, redirect home.
+            res.redirect('/profile');
+        });
+
+
+
+
 
 };
 
