@@ -61,6 +61,37 @@ module.exports = function(app, passport) {
             res.redirect('/');
         });
 
+        // =====================================
+    // LOGIN ===============================
+    // =====================================
+    // show the login form
+    app.get('/login2', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('login2.handlebars', { message: req.flash('loginMessage') });
+        // res.render('login.html', { message: req.flash('loginMessage') });
+        // res.sendFile(path.join(__dirname, "login.html"), { message: req.flash('loginMessage') } );
+
+    });
+
+    // process the login form
+    app.post('/login2', passport.authenticate('local-login', {
+            successRedirect: '/profile', // redirect to the secure profile section
+            failureRedirect: '/login2', // redirect back to the signup page if there is an error
+            failureFlash: true // allow flash messages
+        }),
+        function(req, res) {
+            console.log("hello");
+
+            if (req.body.remember) {
+                req.session.cookie.maxAge = 1000 * 60 * 3;
+            } else {
+                req.session.cookie.expires = false;
+            }
+            res.redirect('/');
+        });
+
+
     // =====================================
     // SIGNUP ==============================
     // =====================================
@@ -81,6 +112,13 @@ module.exports = function(app, passport) {
         failureRedirect: '/signup', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }));
+
+       app.post('/signup2', passport.authenticate('local-signup', {
+        successRedirect: '/profile', // redirect to the secure profile section
+        failureRedirect: '/signup2', // redirect back to the signup page if there is an error
+        failureFlash: true // allow flash messages
+    }));
+
 
     // =====================================
     // PROFILE SECTION =========================
