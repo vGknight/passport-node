@@ -23,12 +23,10 @@ var orm = {
 
         var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
 
-        cnx.query(queryString
-            , [
+        cnx.query(queryString, [
             //where statement
             { authorId: authorId }
-        ]
-        , function(err, result) {
+        ], function(err, result) {
             if (err) {
                 throw err;
             }
@@ -40,30 +38,51 @@ var orm = {
 
     },
 
+    getOneBlog: function(postId, cb) {
+
+        var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
+
+        cnx.query(queryString, [
+            //where statement
+            { id: postId }
+        ], function(err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log(result);
+
+            cb(result);
+
+        });
 
 
-    // insertOne: function(table, burgers_name, devoured, cb) {
+    },
 
-    //     var queryString = "INSERT INTO " + table + " SET ?";
 
-    //     var newBurger = {
-    //         burgers_name: burgers_name,
-    //         devoured: devoured
-    //     };
-    //     cnx.query(queryString, newBurger, function(err, result) {
 
-    //         if (err) {
-    //             throw err;
-    //         }
 
-    //         cb(result);
-    //     });
+    insertOne: function(table, burgers_name, devoured, cb) {
 
-    // },
+        var queryString = "INSERT INTO " + table + " SET ?";
+
+        var newBurger = {
+            burgers_name: burgers_name,
+            devoured: devoured
+        };
+        cnx.query(queryString, newBurger, function(err, result) {
+
+            if (err) {
+                throw err;
+            }
+
+            cb(result);
+        });
+
+    },
 
     //for blog
 
-        addBlogPost: function(title, content, tags, status, createTime, authorId, cb) {
+    addBlogPost: function(title, content, tags, status, createTime, authorId, cb) {
 
         var queryString = "INSERT INTO blog_db.post SET ?";
 
@@ -80,6 +99,56 @@ var orm = {
         console.log(newBlogPost);
 
         cnx.query(queryString, newBlogPost, function(err, result) {
+
+            if (err) {
+                throw err;
+            }
+
+            cb(result);
+        });
+
+    },
+
+    //Get comments for post
+
+      getComments: function(postId, cb) {
+
+        var queryString = "SELECT id, comment, createTime, update_time, authorId FROM blog_db.comment WHERE ?";
+
+        cnx.query(queryString, [
+            //where statement
+            { postId: postId }
+        ], function(err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log(result);
+
+            cb(result);
+
+        });
+
+
+    },
+  
+// add comment to post
+    addComment: function(comment, createTime, authorId, postId, cb) {
+        // addComment: function(comment, createTime, postId, cb) {
+
+        var queryString = "INSERT INTO blog_db.comment SET ?";
+
+        var newComment = {
+            
+            comment: comment,
+            createTime: createTime,
+            authorId: authorId, // add back
+            postId: postId            
+        };
+
+        console.log(queryString);
+        console.log(newComment);
+
+        cnx.query(queryString, newComment, function(err, result) {
 
             if (err) {
                 throw err;

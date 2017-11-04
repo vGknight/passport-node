@@ -1,10 +1,12 @@
 // app/routes.js
 
 var mysql = require('mysql');
+var async = require('async');
 var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
 var orm = require("../config/orm.js");
 var postModel = require("../models/postModel.js");
+var commentsModel = require("../models/commentsModel.js");
 
 
 
@@ -61,7 +63,7 @@ module.exports = function(app, passport) {
             res.redirect('/');
         });
 
-        // =====================================
+    // =====================================
     // LOGIN ===============================
     // =====================================
     // show the login form
@@ -101,7 +103,7 @@ module.exports = function(app, passport) {
         res.render('signup.handlebars', { message: req.flash('signupMessage') });
     });
 
-     app.get('/signup2', function(req, res) {
+    app.get('/signup2', function(req, res) {
         // render the page and pass in any flash data if it exists
         res.render('signup2.handlebars', { message: req.flash('signupMessage') });
     });
@@ -113,7 +115,7 @@ module.exports = function(app, passport) {
         failureFlash: true // allow flash messages
     }));
 
-       app.post('/signup2', passport.authenticate('local-signup', {
+    app.post('/signup2', passport.authenticate('local-signup', {
         successRedirect: '/profile', // redirect to the secure profile section
         failureRedirect: '/signup2', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
@@ -157,8 +159,8 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
 
 
-    // app.post('/api/post/:id', isLoggedIn, function(req, res) {
-    app.post('/api/post/', function(req, res) {
+    app.post('/api/post/', isLoggedIn, function(req, res) {
+        // app.post('/api/post/', function(req, res) {
 
 
         var title = req.body.title;
@@ -179,9 +181,65 @@ module.exports = function(app, passport) {
 
     });
 
+    //add comment
+    // app.post('/api/post/:id', isLoggedIn, function(req, res) {
+    app.post('/api/comment/', function(req, res) {
+
+
+        var comment = req.body.comment;
+        var createTime = req.body.createTime;
+        var postId = req.body.postId;
+        var authorId = req.user.id;
+
+        console.log(authorId + " this is the authorid")
+        console.log(comment + " this is the content")
+
+        commentsModel.addComment(comment, createTime, authorId, postId, function() {
+            // commentsModel.addComment(comment, createTime, postId, function() {
+
+
+            res.redirect('/profile'); // redirect back to post if possible
+        });
+
+    });
+
+    //single blog page
+    // authenticated user gets to leave comments
+
+
+
+    // app.get('/view/:id', isLoggedIn, function(req, res) {
+    app.get('/view/:id', function(req, res) {
+
+        var id = req.params.id;
+        console.log(req.params.id + " req.user.id )))")
+
+
+        postModel.getOneBlog(id, function(data) {
+
+            var hbsObject = {
+                blog: data,
+                user: req.user
+                // authorized: // user: req.user
+            };
+            // console.log(hbsObject);
+            console.log(req.params.id + " req.user.id )))")
+
+            res.render("single.handlebars", hbsObject);
+
+        });
+    });
+
+
+
+
+
+
+
+
     //github stuff
 
-    app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:username' ] }));
+    app.get('/auth/github', passport.authenticate('github', { scope: ['user:username'] }));
 
     // app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
 
@@ -193,10 +251,90 @@ module.exports = function(app, passport) {
         });
 
 
+    // async testing  DOING THIS TO TRY AND LOAD COMMENTS ON BLOG PAGE FOR HANDLEBARS
+
+    app.get('/api/test/view/:id', function(req, res) {
+
+        var id = req.params.id;
+
+
+        async.parallel([
+            // getBlogPost: 
+            function(callback) {
+                postModel.getOneBlog(id, function(data) {
+
+                    var hbsObject = {
+                        blog: data,
+                        user: req.user
+                        // authorized: // user: req.user
+                    };
+
+                    return callback;
+
+                });
+
+
+            },
+            // getBlogComments: 
+            function(callback) {
+
+                commentsModel.getComments(id, function(data) {
+
+                    console.log(id + " ---------------------Should be postId--");
+
+                    // var hbsObject = {
+                    //     blog: data,
+                    //     user: req.user
+
+                    // };
+
+                });
+
+            }
+        ], function(err, results) {
+            if (err)
+                return res.send(500);
+            // results === { universityData: { ... }, courseData: { ... } }
+            // res.render('course', results);
+
+            console.log(results[0] + "============================================================");
+            res.render("single2.handlebars", results);
+        });
+    });
+
+    // app.get('/api/test/view/:id', function(req, res) {
+
+    //     var id = req.params.id;
+
+
+
+
+    //     commentsModel.getComments(id, function(data) {
+
+    //         console.log(data + " ---------------------Should be postId--");
+
+    //         var hbsObject = {
+    //             blog: data,
+    //             user: req.user
+
+    //         };
+
+    //     });
+
+
+    //     // results === { universityData: { ... }, courseData: { ... } }
+    //     // res.render('course', results);
+
+    //     console.log(hbsObject + "============================================================");
+    //     res.render("single2.handlebars", hbsObject);
+    // });
+    // });
 
 
 
 };
+
+
 
 
 
@@ -212,3 +350,20 @@ function isLoggedIn(req, res, next) {
     console.log("redirect due to not logged in")
     res.redirect('/');
 }
+
+// route middleware to make sure
+// function isLoggedIn2(req, res, myVar, next) {
+
+//     // if user is authenticated in the session, carry on
+//     if (req.isAuthenticated())
+
+//         authenticated = true;
+//         this.myVar = myVar;
+
+
+//         return next();
+
+//     // if they aren't redirect them to the home page
+//     console.log("redirect due to not logged in")
+//     res.redirect('/');
+// }

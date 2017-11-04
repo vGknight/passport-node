@@ -195,8 +195,8 @@
         </div> -->
         {{#each post}}
 <div class="blog-left-grid">
-    <div class="blog-left-grid-left">
-        <h3><a href="single.html">{{this.title}}</a></h3>
+    <div class="blog-left-grid-left blog-post" id="{{this.id}}">
+        <h3><a href="/view/{{this.id}}">{{this.title}}</a></h3>
         <p>by <span>Arushi, Jessica, Greg</span> | October 29,2017 | <span>Coding Bootcamp</span></p>
     </div>
     <div class="blog-left-grid-right">
@@ -206,9 +206,11 @@
     <a href="single.html"><img src="images/4.jpg" alt=" " class="img-responsive"></a>
     <p class="para"> {{this.content}} </p>
     <div class="rd-mre">
-        <a href="single.html" class="hvr-bounce-to-bottom quod">Read More</a>
+        <a href="/view/{{this.id}}" class="hvr-bounce-to-bottom quod">Read More</a>
     </div>
 </div>
+
+
 {{/each}}
         <!-- <div class="blog-right">
 					<div class="sap_tabs">	

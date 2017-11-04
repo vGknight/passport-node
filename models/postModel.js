@@ -24,6 +24,16 @@ var postModel = {
 
         });
     },
+
+      getOneBlog: function(id, cb) {
+
+        orm.getOneBlog(id, function(result) {
+
+            cb(result);
+            // console.log(result);
+
+        });
+    },
 //update
     // insertOne: function(name, devoured, cb) {
     //     orm.insertOne("post", name, devoured, function(result) {

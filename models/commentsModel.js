@@ -17,30 +17,24 @@ var commentsModel = {
         });
     },
 
-      getMyBlogs: function(id, cb) {
+      getComments: function(postId, cb) {
 
-        orm.getMyBlogs(id, function(result) {
+        orm.getComments(postId, function(result) {
 
             cb(result);
-            // console.log(result);
+            console.log(result);
 
         });
     },
-//update
-    // insertOne: function(name, devoured, cb) {
-    //     orm.insertOne("post", name, devoured, function(result) {
-
-    //         cb(result);
-    //     })
-    // },
-
 
 
     //updated for blog pp
-    addBlogPost: function(title, content, tags, status, createTime, authorId, cb) {
+    addComment: function(comment, createTime, authorId, postId, cb) { // fix to include author id
+         // addComment: function(comment, createTime,postId, cb) {
 
-        console.log("thisis from the post.js " + authorId);
-        orm.addBlogPost(title, content, tags, status, createTime, authorId, function(result) {
+        
+        orm.addComment(comment, createTime, authorId, postId, function(result) {
+            // orm.addComment(comment, createTime, postId, function(result) {
 
             cb(result);
         })

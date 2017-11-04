@@ -5,6 +5,7 @@
     "start": "node ./server"
   },
   "dependencies": {
+    "async": "^2.5.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.13.1",
     "connect-flash": "^0.1.1",
