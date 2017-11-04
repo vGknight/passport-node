@@ -8,14 +8,14 @@ console.log("Comments Model loaded");
 var commentsModel = {
 
 
-    selectAll: function(cb) {
+    // selectAll: function(cb) {
 
-        orm.selectAll("id, title, content, tags, status, createTime, updateTime, authorId", "post", function(result) {
+    //     orm.selectAll("id, title, content, tags, status, createTime, updateTime, authorId", "post", function(result) {
 
-            cb(result);
+    //         cb(result);
 
-        });
-    },
+    //     });
+    // },
 
       getComments: function(postId, cb) {
 
@@ -40,16 +40,16 @@ var commentsModel = {
         })
     },
 //update
-    updateOne: function(item_id, devoured, cb) {
-        orm.updateOne("post", item_id, devoured, function(result) {
+    // updateOne: function(item_id, devoured, cb) {
+    //     orm.updateOne("post", item_id, devoured, function(result) {
 
-            cb(result);
+    //         cb(result);
 
-        })
+    //     })
 
 
 
-    }
+    // }
 
 }
 

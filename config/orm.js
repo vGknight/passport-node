@@ -57,6 +57,58 @@ var orm = {
 
 
     },
+    // returns single blog post and user information
+    getOneBlogJoin: function(postId, cb) {
+
+        var queryString = "SELECT blog_db.post.id AS postID, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId, blog_db.user.username FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id HAVING ?"
+
+        // var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
+
+        // var blogPostId = 'blog_db.post.id'
+
+        cnx.query(queryString, [
+            //where statement
+            { 'post.id': postId }
+        ], function(err, result) {
+            if (err) {
+                throw err;
+            }
+            // console.log("==============" + result);
+
+            cb(result);
+
+        });
+
+
+    },
+
+     // returns all vblog posts and user information
+    getAllBlogJoin: function(cb) {
+
+        var queryString = "SELECT blog_db.post.id AS postID, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId, blog_db.user.id, blog_db.user.username FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id";
+
+        // var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
+
+        // var blogPostId = 'blog_db.post.id'
+
+        cnx.query(queryString
+        //     , [
+        //     //where statement
+        //     { 'post.id': postId }
+        // ]
+        , function(err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log(result);
+
+            cb(result);
+
+        });
+
+
+    },
+
 
 
 

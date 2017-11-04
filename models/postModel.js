@@ -15,6 +15,16 @@ var postModel = {
         });
     },
 
+    // need getAllBlogsJoin
+      getAllBlogJoin: function(cb) {
+
+        orm.getAllBlogJoin(function(result) {
+
+            cb(result);
+
+        });
+    },
+
       getMyBlogs: function(id, cb) {
 
         orm.getMyBlogs(id, function(result) {
@@ -28,6 +38,16 @@ var postModel = {
       getOneBlog: function(id, cb) {
 
         orm.getOneBlog(id, function(result) {
+
+            cb(result);
+            // console.log(result);
+
+        });
+    },
+
+        getOneBlogJoin: function(id, cb) {
+
+        orm.getOneBlogJoin(id, function(result) {
 
             cb(result);
             // console.log(result);
