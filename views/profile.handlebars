@@ -45,7 +45,7 @@
             {{#each post}}
         <div class="blog-post">
             <h2 class="blog-post-title">{{this.title}} {{this.id}}</h2>
-            <p class="blog-post-meta">December 23, 2013 by <a href="#">{{this.username}}</a></p>
+            <p class="blog-post-meta">{{formatDt this.createTime}}<a href="#">{{this.username}}</a></p>
             {{this.content}}
             <div class="card my-4">
             <h5 class="card-header">Leave a Comment:</h5>

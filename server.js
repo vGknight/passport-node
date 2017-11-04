@@ -12,6 +12,7 @@ var port = process.env.PORT || 8080;
 
 var passport = require('passport');
 var flash = require('connect-flash');
+var moment = require("moment");
 
 // configuration ===============================================================
 // connect to our database
@@ -33,12 +34,16 @@ app.use(express.static("public"));
 
 // Set Handlebars.
 var exphbs = require("express-handlebars");
+// date
+
+
 
 // app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.engine('handlebars', exphbs({
     defaultLayout: "main",
     helpers: {
         // Function to do basic mathematical operation in handlebar
+        // {{math @index "+" 1}}. {{burgers_name}} </div>
         math: function(lvalue, operator, rvalue) {
             lvalue = parseFloat(lvalue);
             rvalue = parseFloat(rvalue);
@@ -49,7 +54,17 @@ app.engine('handlebars', exphbs({
                 "/": lvalue / rvalue,
                 "%": lvalue % rvalue
             }[operator];
-        }
+        },
+        // function to format date
+        //{{formatDate createTime}}
+        formatDt: function(timeToFormat) {
+
+          return moment(timeToFormat).format("MMMM DD, YYYY");
+
+            // return val;
+        },
+
+
     }
 }));
 app.set("view engine", "handlebars");
