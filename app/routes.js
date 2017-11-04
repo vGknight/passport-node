@@ -217,8 +217,8 @@ module.exports = function(app, passport) {
 
     //single blog page
     // authenticated user gets to leave comments
-    // app.get('/view/:id', isLoggedIn, function(req, res) {
-    app.get('/view/:id', function(req, res) {
+    app.get('/view/:id', isLoggedIn2, function(req, res) {
+    // app.get('/view/:id', function(req, res) {
 
         var id = req.params.id;
         console.log(req.params.id + " req.user.id )))")
@@ -236,6 +236,31 @@ module.exports = function(app, passport) {
             console.log(req.params.id + " req.user.id )))")
 
             res.render("single.handlebars", hbsObject);
+
+        });
+    });
+
+    //single blog page
+    // authenticated user gets to leave comments
+    // app.get('/view/:id', isLoggedIn, function(req, res) {
+    app.get('/guest/view/:id', function(req, res) {
+
+        var id = req.params.id;
+        console.log(req.params.id + " req.user.id )))")
+
+
+        postModel.getOneBlogJoin(id, function(data) {
+        // postModel.getOneBlog(id, function(data) {
+
+            var hbsObject = {
+                blog: data,
+                // user: req.user
+                // authorized: // user: req.user
+            };
+            // console.log(hbsObject);
+            // console.log(req.params.id + " req.user.id )))")
+
+            res.render("singleGuest.handlebars", hbsObject);
 
         });
     });
@@ -361,19 +386,20 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-// route middleware to make sure
-// function isLoggedIn2(req, res, myVar, next) {
+// route middleware to make show guest page without comments otion for unathenticated users
+function isLoggedIn2(req, res, next) {
 
-//     // if user is authenticated in the session, carry on
-//     if (req.isAuthenticated())
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
 
-//         authenticated = true;
-//         this.myVar = myVar;
+        // authenticated = true;
+        // this.myVar = myVar;
 
 
-//         return next();
-
-//     // if they aren't redirect them to the home page
-//     console.log("redirect due to not logged in")
-//     res.redirect('/');
-// }
+        return next();
+    // var id =
+    // if they aren't redirect them to the home page
+    console.log("redirect due to not logged in")
+    var redirect = '/guest/view/' + req.params.id;
+    res.redirect(redirect);
+}

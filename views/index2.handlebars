@@ -1,7 +1,11 @@
 <!-- <body> -->
 <!-- banner-body -->
 <!-- <div class="banner-body"> -->
-<!-- <div class="container"> -->
+<!-- <div class="container"> -->  {{#if user}}
+        <p>Hello {{user.username}}</p>
+    {{else}}
+        <p>Please <a href='/login'>Log In</a></p>
+    {{/if}}
 
 <!-- header -->
 <!-- header-bottom -->

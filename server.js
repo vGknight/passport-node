@@ -36,8 +36,6 @@ app.use(express.static("public"));
 var exphbs = require("express-handlebars");
 // date
 
-
-
 // app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.engine('handlebars', exphbs({
     defaultLayout: "main",
@@ -61,7 +59,6 @@ app.engine('handlebars', exphbs({
 
           return moment(timeToFormat).format("MMMM DD, YYYY");
 
-            // return val;
         },
 
 
@@ -80,6 +77,11 @@ app.use(session({
 })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
+app.use(function(req, res, next) {
+    res.locals.user = req.user; // This is the important line
+
+    next();
+});
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 
