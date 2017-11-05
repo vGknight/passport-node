@@ -20,11 +20,11 @@ module.exports = function(app, passport) {
     app.get('/', function(req, res) {
 
         // postModel.selectAll(function(data) {
-            postModel.getAllBlogJoin(function(data){
+        postModel.getAllBlogJoin(function(data) {
 
             var hbsObject = {
                 post: data
-             
+
             };
             // console.log(hbsObject);
 
@@ -80,7 +80,7 @@ module.exports = function(app, passport) {
 
     // about page
 
-      app.get('/about', function(req, res) {
+    app.get('/about', function(req, res) {
 
         // render the page and pass in any flash data if it exists
         res.render('about.handlebars', { message: req.flash('loginMessage') });
@@ -218,14 +218,14 @@ module.exports = function(app, passport) {
     //single blog page
     // authenticated user gets to leave comments
     app.get('/view/:id', isLoggedIn2, function(req, res) {
-    // app.get('/view/:id', function(req, res) {
+        // app.get('/view/:id', function(req, res) {
 
         var id = req.params.id;
         console.log(req.params.id + " req.user.id )))")
 
 
         postModel.getOneBlogJoin(id, function(data) {
-        // postModel.getOneBlog(id, function(data) {
+            // postModel.getOneBlog(id, function(data) {
 
             var hbsObject = {
                 blog: data,
@@ -250,17 +250,42 @@ module.exports = function(app, passport) {
 
 
         postModel.getOneBlogJoin(id, function(data) {
-        // postModel.getOneBlog(id, function(data) {
+            // postModel.getOneBlog(id, function(data) {
 
-            var hbsObject = {
-                blog: data,
-                // user: req.user
-                // authorized: // user: req.user
-            };
-            // console.log(hbsObject);
+
+
+            //look into route validator 
+
+            if (data.length == 0) {
+
+                console.log(data.length);
+                // res.render("/");
+                return res.status(404).end();
+            } else {
+                var hbsObject = {
+                    blog: data
+                    // user: req.user
+                    // authorized: // user: req.user
+                };
+                console.log(data.length);
+                res.render("singleGuest.handlebars", hbsObject);
+            }
+
+
+            // if (data) {
+
+            //     res.render("singleGuest.handlebars", hbsObject);
+            // } else {
+            //     console.log("SHits missing");
+            //     res.render("/");
+            // }
+
+
+
             // console.log(req.params.id + " req.user.id )))")
 
-            res.render("singleGuest.handlebars", hbsObject);
+
+
 
         });
     });
