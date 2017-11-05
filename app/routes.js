@@ -7,6 +7,10 @@ var connection = mysql.createConnection(dbconfig.connection);
 var orm = require("../config/orm.js");
 var postModel = require("../models/postModel.js");
 var commentsModel = require("../models/commentsModel.js");
+var nodeMailer = require('nodemailer');
+var sgTransport = require('nodemailer-sendgrid-transport');
+var mailer = require("../config/smtpCfg.js");
+
 
 
 
@@ -33,6 +37,27 @@ module.exports = function(app, passport) {
 
         });
     });
+
+    // Contact form email
+
+    app.post('/api/send-contact-email', function (req, res) {
+
+      let transporter = nodeMailer.createTransport(sgTransport(mailer.smtpCfg));
+      let mailOptions = mailer.contactMail;
+      mailOptions.text = "Name: " + req.body.name + "\nEmail : " + req.body.email + "\nGithub: " + req.body.github + "\nComments: " + req.body.comments;
+      // let mailer.smtp = req.body.body;
+
+      console.log(mailOptions);
+      // console.log(req.body);
+
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+              res.render('index');
+          });
+      });
 
     // =====================================
     // LOGIN ===============================
@@ -79,6 +104,15 @@ module.exports = function(app, passport) {
 
 
     // about page
+
+        app.get('/contact', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('contact.handlebars', { message: req.flash('loginMessage') });
+        // res.render('login.html', { message: req.flash('loginMessage') });
+        // res.sendFile(path.join(__dirname, "login.html"), { message: req.flash('loginMessage') } );
+
+    });
 
     app.get('/about', function(req, res) {
 

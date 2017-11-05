@@ -35,6 +35,37 @@ $(function() {
         );
     });
 
+    $("#contact-form").on("submit", function(event) {
+        // Make sure to preventDefault on a submit event.
+        console.log("submit pushed");
+
+        event.preventDefault();
+
+        var newContactReq = {
+            name: $("#name").val().trim(),
+            github: $("#github").val().trim(),
+            email: $("#email").val().trim(),
+            createTime: moment().format("YYYY-MM-DD hh:mm:ss")
+
+        };
+
+        console.log(newContactReq);
+
+        // Send the POST request.
+        $.ajax("/api/send-contact-email", {
+            type: "POST",
+            data: newContactReq
+        }).then(
+            function() {
+                console.log("Contact form sent...");
+                // Reload the page to get the updated list - this sucks
+                location.reload();
+
+
+            }
+        );
+    });
+
     // $("#myForm").on("submit", function(event) {
     //     // Make sure to preventDefault on a submit event.
     //     console.log("submit pushed");
