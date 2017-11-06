@@ -66,6 +66,10 @@ $(function() {
         );
     });
 
+    $('#createBlog').on('click', function(e) {
+        $('#myModal').modal('show');
+    })
+
     // $("#myForm").on("submit", function(event) {
     //     // Make sure to preventDefault on a submit event.
     //     console.log("submit pushed");
@@ -108,7 +112,7 @@ $(function() {
     $("#comment-button").on("click", function(event) {
         console.log("comment submitted");
 
-        
+
 
         event.preventDefault();
 

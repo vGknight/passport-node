@@ -38,6 +38,42 @@ var orm = {
 
     },
 
+    //use this to dynamically populate featured blog drop down
+
+    getAllBlogers: function(cb) {
+
+        var queryString = "SELECT id AS userId, username, fName, lName, email FROM blog_db.user";
+
+        cnx.query(queryString, function(err, result) {
+            if (err) {
+                throw err;
+            }
+
+            cb(result);
+
+        });
+
+
+    },
+        getMyBlogsJoin: function(authorId, cb) {
+
+        var queryString = "SELECT blog_db.post.id, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId ,blog_db.user.username, blog_db.user.fName FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id HAVING ?";
+
+        cnx.query(queryString, [
+            //where statement
+            { authorId: authorId }
+        ], function(err, result) {
+            if (err) {
+                throw err;
+            }
+
+            cb(result);
+
+        });
+
+
+    },
+
     getOneBlog: function(postId, cb) {
 
         var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
@@ -60,7 +96,7 @@ var orm = {
     // returns single blog post and user information
     getOneBlogJoin: function(postId, cb) {
 
-        var queryString = "SELECT blog_db.post.id AS postID, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId, blog_db.user.username FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id HAVING ?"
+        var queryString = "SELECT blog_db.post.id AS postID, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId, blog_db.user.username, blog_db.user.fName FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id HAVING ?"
 
         // var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
 
@@ -85,7 +121,7 @@ var orm = {
      // returns all vblog posts and user information
     getAllBlogJoin: function(cb) {
 
-        var queryString = "SELECT blog_db.post.id AS postID, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId, blog_db.user.id, blog_db.user.username FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id";
+        var queryString = "SELECT blog_db.post.id AS postID, blog_db.post.title, blog_db.post.content, blog_db.post.createTime, blog_db.post.updateTime, blog_db.post.authorId, blog_db.user.id, blog_db.user.username ,blog_db.user.fName FROM blog_db.post LEFT JOIN blog_db.user ON blog_db.post.authorId = blog_db.user.id";
 
         // var queryString = "SELECT id, title, content, tags, status, createTime, updateTime, authorId FROM blog_db.post WHERE ?";
 

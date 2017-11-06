@@ -26,11 +26,30 @@ module.exports = function(app, passport) {
         // postModel.selectAll(function(data) {
         postModel.getAllBlogJoin(function(data) {
 
-            var hbsObject = {
-                post: data
+            // move this to fn outside of routes
+            // gets unique names and id's for passing to handlebars
 
+            var list = [];
+            var list2 = [];
+            users = {};
+            for (var i = 0; i < data.length; i++) {
+                list.push(data[i].authorId);
+                list2.push(data[i].fName);
+
+            }
+            let unique = [...new Set(list)]
+            let unique2 = [...new Set(list2)]
+            for (var i = 0; i < unique.length; i++) {
+                users[i] = { 'userId': unique[i], 'fName': unique2[i] }
+
+            }
+
+
+            var hbsObject = {
+                post: data,
+                authors: users
             };
-            // console.log(hbsObject);
+
 
             // res.render('index.handlebars', hbsObject); // load the index.handlebars file
             res.render('index2.handlebars', hbsObject); // load the index.handlebars file
@@ -40,24 +59,47 @@ module.exports = function(app, passport) {
 
     // Contact form email
 
-    app.post('/api/send-contact-email', function (req, res) {
+    app.post('/api/send-contact-email', function(req, res) {
 
-      let transporter = nodeMailer.createTransport(sgTransport(mailer.smtpCfg));
-      let mailOptions = mailer.contactMail;
-      mailOptions.text = "Name: " + req.body.name + "\nEmail : " + req.body.email + "\nGithub: " + req.body.github + "\nComments: " + req.body.comments;
-      // let mailer.smtp = req.body.body;
+        let transporter = nodeMailer.createTransport(sgTransport(mailer.smtpCfg));
+        let mailOptions = mailer.contactMail;
+        mailOptions.text = "Name: " + req.body.name + "\nEmail : " + req.body.email + "\nGithub: " + req.body.github + "\nComments: " + req.body.comments;
+        // let mailer.smtp = req.body.body;
 
-      console.log(mailOptions);
-      // console.log(req.body);
+        console.log(mailOptions);
+        // console.log(req.body);
 
-      transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-              return console.log(error);
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-              res.render('index');
-          });
-      });
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+            res.render('index');
+        });
+    });
+
+    // author pages
+
+    app.get('/pages', function(req, res) {
+
+        res.render('pages.handlebars');
+    });
+
+    app.get('/pages/:author', function(req, res) {
+
+        var author = req.params.author;
+        postModel.getMyBlogsJoin(author, function(data) {
+
+            var hbsObject = {
+                blog: data,
+                user: req.user
+
+            };
+
+            res.render('pages.handlebars', hbsObject);
+        });
+
+    });
 
     // =====================================
     // LOGIN ===============================
@@ -105,10 +147,23 @@ module.exports = function(app, passport) {
 
     // about page
 
-        app.get('/contact', function(req, res) {
+    app.get('/contact', function(req, res) {
+
+        postModel.getAllBlogers(function(data) {
+
+            var hbsObject = {
+                authors: data
+                
+
+            };
+
+            console.log(hbsObject)
+
+            res.render('contact.handlebars', hbsObject);
+        });
 
         // render the page and pass in any flash data if it exists
-        res.render('contact.handlebars', { message: req.flash('loginMessage') });
+        // res.render('contact.handlebars', { message: req.flash('loginMessage') });
         // res.render('login.html', { message: req.flash('loginMessage') });
         // res.sendFile(path.join(__dirname, "login.html"), { message: req.flash('loginMessage') } );
 
@@ -116,8 +171,23 @@ module.exports = function(app, passport) {
 
     app.get('/about', function(req, res) {
 
+        postModel.getAllBlogers(function(data) {
+
+            var hbsObject = {
+                authors: data
+                
+
+            };
+
+            console.log(hbsObject)
+
+            res.render('about.handlebars', hbsObject);
+        });
+
+
+
         // render the page and pass in any flash data if it exists
-        res.render('about.handlebars', { message: req.flash('loginMessage') });
+        // res.render('about.handlebars', { message: req.flash('loginMessage') });
         // res.render('login.html', { message: req.flash('loginMessage') });
         // res.sendFile(path.join(__dirname, "login.html"), { message: req.flash('loginMessage') } );
 

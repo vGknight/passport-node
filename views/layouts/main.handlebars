@@ -62,11 +62,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <ul class="nav navbar-nav">
                     <li class="hvr-bounce-to-bottom active"><a href="/">Home</a></li>
                     <li class="hvr-bounce-to-bottom"><a href="/about">About</a></li>
-                    <li class="hvr-bounce-to-bottom dropdown"><a href="Pages.html">Featured Blogs</a>
+                    <!-- <li class="hvr-bounce-to-bottom dropdown"><a href="Pages.html">Featured Blogs</a> -->
+                    <li class="hvr-bounce-to-bottom dropdown"><a>Featured Blogs</a>
                         <div class="dropdown-content">
-                            <a href="#">Arushi</a>
+
+                         {{#each authors}}
+                            <a href="/pages/{{this.userId}}">{{this.fName}}</a>
+                        {{/each}}
+                        <!--     <a href="#">Arushi</a>
                             <a href="#">Jessica</a>
-                            <a href="#">Greg</a>
+                            <a href="#">Greg</a> -->
                         </div>
                     </li>
                     <li class="hvr-bounce-to-bottom"><a href="/contact">Contact Us</a></li>
@@ -92,19 +97,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                       <div class="sign-in">
                     <ul>
                         <li><a href="/login">Sign In </a>/</li>
-                        <li><a href="/signup">Register</a></li>
+                        <li><a href="/contact">Register</a></li>
                     </ul>
                 </div>
                  {{/if}}
 
-
+                {{#if user}}
                 <div class="sign-in2">
                     <ul>
                         <li><a href="#" id="createBlog">Write a Blog </a></li>
                     </ul>
                 </div>
+                {{else}}
+                {{/if}}
                 <!---MODAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <!--  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -142,14 +149,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!---MODAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
                 <!-- JQuery for Modal-->
-                <script>
+               <!--  <script>
                 $('#createBlog').on('click', function(e) {
                     $('#myModal').modal('show');
                 })
-                </script>
+                </script> -->
             </div>
             <!-- /.navbar-collapse -->
         </nav>
@@ -231,7 +238,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <!-- </div> -->
         <div class="footer-bottom">
             <div class="container">
-                <p>© 2015 Quickly. All rights reserved | Design by <a href="http://w3layouts.com/"> W3layouts</a></p>
+                <p>© 2017 CWRU Coding BootCamp Project #2</p>
             </div>
         </div>
         <!-- //footer -->

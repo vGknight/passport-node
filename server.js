@@ -61,6 +61,29 @@ app.engine('handlebars', exphbs({
 
         },
 
+        getAuthors: function(data){
+
+           //logic to get getAuthors
+           var list = [];
+           var list2 = [];
+           users = {};
+            for (var i = 0; i < data.length; i++) {
+                list.push(data[i].authorId);
+                list2.push(data[i].fName);
+
+            }
+            let unique =[...new Set(list)]
+            let unique2 =[...new Set(list2)]
+
+            for (var i = 0; i < unique.length; i++) {
+                users[i] = {'userId': unique[i], 'fName': unique2[i]}
+                
+            }
+
+            return users;
+
+        },
+
 
     }
 }));
